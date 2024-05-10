@@ -103,16 +103,28 @@ class TaskManagerController extends Controller
                       }
                   }
       
-                  //Insert intp project_task table
-                      foreach ($request['selectedProjects'] as $projectname)
-                      {
-                          $project_selected = Project::where('project_name',$projectname)->first();
-                          $project_tasks = new ProjectTask();
-                          $project_tasks->project_id = $project_selected->project_id;
-                          $project_tasks->task_id =  $lastInsertedId;
-                          $project_tasks->save();
-                          
-                      }
+                        //Insert intp project_task table
+                        
+                            foreach ($request['selectedProjects'] as $projectname)
+                            {
+
+                                $project_selected = Project::where('project_name',$projectname)->first();
+                                    if($project_selected)
+                                    {
+                                        $project_tasks = new ProjectTask();
+                                        $project_tasks->project_id = $project_selected->project_id;
+                                        $project_tasks->task_id =  $lastInsertedId;
+                                        $project_tasks->save();
+                                    }
+                                    else
+                                    {
+                                        return response()->json(['message' =>'Selected project: '.$projectname.' not found. '],404);
+                                    }
+                                
+                                
+                            }
+                        
+                      
                   //Insert into task_user table
                   if($request->has('selectedUsers'))
                   {     
@@ -120,16 +132,25 @@ class TaskManagerController extends Controller
                       foreach ($request['selectedUsers'] as $user)
                       {
                           $user_selected = User::where('name',$user)->first();
-                          $task_users = new TaskUser();
-                          $task_users->id = $user_selected->id;
-                          $task_users->task_id =   $lastInsertedId;
-                          $task_users->save();
+                          if( $user_selected )
+                          {
+                            $task_users = new TaskUser();
+                            $task_users->id = $user_selected->id;
+                            $task_users->task_id =   $lastInsertedId;
+                            $task_users->save();
+                          }
+                          else
+                          {
+                            return response()->json(['message' =>'Selected User: '.$user.' not found. '],404);
+
+                          }
+                     
                         
                       }
                   }
 
                   DB::commit();
-                  return response()->json(['message' =>'Task and its details added successfully'],200);
+                  return response()->json(['message' =>'Task and its details added successfully'],201);
             }
             catch (\Exception $e) 
             {

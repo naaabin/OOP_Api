@@ -15,6 +15,12 @@ use App\Http\Resources\TaskResource;
 
 class FilteringController extends Controller
 {
+    public function displaytasks()
+    {
+        $tasks = Task::with('users', 'projects')->get();
+        return TaskResource::collection($tasks);
+    }
+
     public function filter(Request $request)
     {
         // Get the selected user and project from the request

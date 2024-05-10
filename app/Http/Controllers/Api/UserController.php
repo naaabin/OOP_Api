@@ -6,15 +6,15 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
-
-
+use Illuminate\Support\Facades\Auth;
+use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
 {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function register(Request $request)
     {
         $validator= Validator::make($request->all(), [
 
@@ -39,7 +39,7 @@ class UserController extends Controller
             $user->password = bcrypt($request['password']);
             $user->save();
             DB::commit();
-            return response()->json(['message' =>'User successfully signed up!'], 200);
+            return response()->json(['message' =>'User successfully signed up!'], 201);
             }
             catch (\Exception $e) {
                   DB::rollBack();
@@ -48,19 +48,41 @@ class UserController extends Controller
         }   
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function login(Request $request)
     {
-        //
+        $validator= Validator::make($request->all(), [
+
+            'email' => ['required' ,'string', 'email'], 
+            'password' => ['required', 'string'],  
+        ]);
+
+        if ($validator->fails()) 
+        {
+            return response()->json($validator->messages(),400);
+        }
+
+        if (! $token = JWTAuth::attempt($request->only('email', 'password'))) 
+        {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        return $this->respondWithToken($token);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    protected function respondWithToken($token)
     {
-        //
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => JWTAuth::factory()->getTTL() * 60
+        ]);
     }
+
+    public function logout()
+    {
+        auth()->logout();
+
+        return response()->json(['message' => 'Successfully logged out']);
+    }
+
 }

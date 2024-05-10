@@ -52,7 +52,7 @@ class ProjectManagerController extends Controller
     
             if($projectadd->save())
             {
-                return response()->json(['message' => 'Project added successfully'], 200);
+                return response()->json(['message' => 'Project added successfully'], 201);
     
             }
             else
@@ -72,15 +72,10 @@ class ProjectManagerController extends Controller
 
         if ($project === null) 
         {
-            return response()->json(['message' =>'Project not found'],200);
+            return response()->json(['message' =>'Project not found for ID: '.$id],404);
         }
         else
         {
-                if ($project->tasks->isEmpty()) 
-                {
-                    return response()->json(['message'=> 'No tasks found for project with id: '.$project->project_id],200);
-                }
-            
             return new ProjectResource($project);
         }  
 
@@ -93,7 +88,7 @@ class ProjectManagerController extends Controller
             $project = Project::find($id);
             if(is_null($project))
             {
-                return response()->json(['message'=> 'Project not found'], 404);
+                return response()->json(['message' =>'Project not found for ID: '.$id],404);
             }     
             else
             {   
@@ -139,7 +134,7 @@ class ProjectManagerController extends Controller
         $project = Project::find($id);
             if(is_null($project))
             {
-                return response()->json(['message'=> 'Project not found'], 404);
+                return response()->json(['message' =>'Project not found for ID: '.$id],404);
             } 
             else
             {
@@ -164,7 +159,7 @@ class ProjectManagerController extends Controller
         $project = Project::with('notes')->find($id);
         if(is_null($project))
         {
-            return response()->json(['message'=> 'Project doesnt exist'],404);
+            return response()->json(['message' =>'Project not found for ID: '.$id],404);
         }
        else
        {
