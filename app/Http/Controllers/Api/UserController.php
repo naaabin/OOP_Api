@@ -31,18 +31,19 @@ class UserController extends Controller
         else
         {
             DB::beginTransaction();
-            try {
-
-            $user = new User();
-            $user->name = $request['name'];
-            $user->email = $request['email'];
-            $user->password = bcrypt($request['password']);
-            $user->save();
-            DB::commit();
-            return response()->json(['message' =>'User successfully signed up!'], 201);
+            try 
+            {
+                $user = new User();
+                $user->name = $request['name'];
+                $user->email = $request['email'];
+                $user->password = bcrypt($request['password']);
+                $user->save();
+                DB::commit();
+                return response()->json(['message' =>'User successfully signed up!'], 201);
             }
-            catch (\Exception $e) {
-                  DB::rollBack();
+            catch (\Exception $e) 
+            {
+                DB::rollBack();
                 return response()->json(['message' =>'Internal Server error'],500);
             }
         }   
@@ -74,7 +75,7 @@ class UserController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => JWTAuth::factory()->getTTL() * 60
+            'expires_in' => JWTAuth::factory()->getTTL() * 120
         ]);
     }
 

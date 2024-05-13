@@ -12,6 +12,7 @@ class FilteredDataResource extends JsonResource
     {
         
             return [
+                'Task ID' => $this->task_id,
                 'Task' => $this->task,
                 'Description' => $this->description,
                 'Priority' => $this->priority,

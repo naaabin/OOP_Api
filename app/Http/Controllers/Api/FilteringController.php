@@ -24,8 +24,8 @@ class FilteringController extends Controller
     public function filter(Request $request)
     {
         // Get the selected user and project from the request
-        $selectedUser = $request['selecteduser'];
-        $selectedProject = $request['selectedproject'];
+        $selectedUser = $request['selecteduserID'];
+        $selectedProject = $request['selectedprojectID'];
     
         // Initialize the variables to hold the results
         $userfilter = null;
@@ -92,7 +92,14 @@ class FilteringController extends Controller
                 }
                 else
                 {
-                    return FilteredDataResource::collection($taskfilter);
+                    $selectedUserName = User::find($selectedUser)->name;
+                    $selectedProjectName = Project::find($selectedProject)->project_name;
+                    
+                    return response()->json([
+                        'Selected User' => $selectedUserName,
+                        'Selected Project' => $selectedProjectName,
+                        'Tasks' => FilteredDataResource::collection($taskfilter)
+                    ]);
                 }   
             }
             catch (ModelNotFoundException $e)

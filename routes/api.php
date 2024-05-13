@@ -7,7 +7,6 @@ use App\Http\Controllers\Api\ProjectManagerController;
 use App\Http\Controllers\Api\TaskManagerController;
 use App\Http\Controllers\Api\FilteringController;
 
-
 Route::post('users/register', [UserController::class, 'register']);
 Route::post('users/login', [UserController::class, 'login']);
 Route::post('users/logout', [UserController::class, 'logout']);
