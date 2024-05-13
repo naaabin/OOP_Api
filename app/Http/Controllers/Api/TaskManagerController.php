@@ -150,7 +150,7 @@ class TaskManagerController extends Controller
                   }
 
                   DB::commit();
-                  return response()->json(['message' =>'Task and its details added successfully'],201);
+                  return response()->json(['message' =>'Task and its details added successfully' , 'Task' => $task],201);
             }
             catch (\Exception $e) 
             {

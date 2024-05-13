@@ -52,7 +52,7 @@ class ProjectManagerController extends Controller
     
             if($projectadd->save())
             {
-                return response()->json(['message' => 'Project added successfully'], 201);
+                return response()->json(['message' => 'Project added successfully', 'Project' => $projectadd], 201);
     
             }
             else

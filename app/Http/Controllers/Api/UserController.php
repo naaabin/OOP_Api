@@ -71,8 +71,10 @@ class UserController extends Controller
     }
 
     protected function respondWithToken($token)
-    {
-        return response()->json([
+    {    
+        $user = Auth::user();
+        return response()->json([  
+            'User' => $user->name,
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => JWTAuth::factory()->getTTL() * 120
