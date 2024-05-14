@@ -25,6 +25,8 @@ class TaskResource extends JsonResource
             'Projects' => $this->projects->pluck('project_name')->implode(', '),
             'Project IDs' => $this->projects->pluck('project_id')->implode(', '),
             'No of projects' => $this->projects->count(),
+            'Users' => $this->users->pluck('name')->implode(', '),
+            'User Ids'=> $this->users->pluck('id')->implode(', ')
         ];
     }
 }

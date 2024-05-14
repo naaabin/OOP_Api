@@ -11,11 +11,8 @@ use App\Models\Project;
 use App\Models\User;
 use App\Models\File;
 use App\Models\Note;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 use App\Models\TaskUser;
 use App\Models\ProjectTask;
-use App\Models\TaskFile;
 use App\Http\Resources\TaskResource;
 use App\Http\Resources\NoteResource;
 use App\Http\Resources\UserResource;
@@ -80,27 +77,17 @@ class TaskManagerController extends Controller
                       {   
                       
                           $filename = $file->getClientOriginalName();
-          
-                          // Move the file to your desired location (public/uploads in this case)
-                          $file->move(public_path('uploads'), $filename);
-          
+                          $path = $file->storeAs('Uploads',$filename,'public');  //stores the file and returns full path
+        
                           // Insert the file info into the database
                           $fileRecord = new File();
                           $fileRecord->file_name = $filename;
-                          $fileRecord->file_loc = 'uploads/' . $filename;
+                          $fileRecord->file_loc = $path;
                           $fileRecord->task_id =  $lastInsertedId;
                           $fileRecord->save();
                           $fileIDs[] = $fileRecord->file_id;   //last inserted file id     
                       }
-                      
-                      // Insert into task_file data into the database
-                      foreach ($fileIDs as $fileID) 
-                      {
-                          $task_file = new TaskFile();
-                          $task_file->task_id =   $lastInsertedId;
-                          $task_file->file_id = $fileID;
-                          $task_file->save();
-                      }
+                    
                   }
       
                         //Insert intp project_task table
@@ -120,8 +107,7 @@ class TaskManagerController extends Controller
                                     {
                                         return response()->json(['message' =>'Selected project: '.$projectname.' not found. '],404);
                                     }
-                                
-                                
+                                  
                             }
                         
                       
@@ -150,7 +136,10 @@ class TaskManagerController extends Controller
                   }
 
                   DB::commit();
-                  return response()->json(['message' =>'Task and its details added successfully' , 'Task' => $task],201);
+                  return response()->json([
+                          'message' =>'Task and its details added successfully',
+                          'Task detail' => new TaskResource($task),       
+                  ],201);
             }
             catch (\Exception $e) 
             {

@@ -84,7 +84,7 @@ class FilteringController extends Controller
                 $query->where('users.id', $selectedUser);
             })->whereHas('projects', function ($query) use ($selectedProject) {
                 $query->where('projects.project_id', $selectedProject);
-            })->with(['users', 'projects', 'files'])->get();
+            })->get();
 
                if ($taskfilter->isEmpty()) 
                 {
