@@ -68,7 +68,6 @@ class FilteringController extends Controller
                 {
                     return new FilterByProjectResource($projectfilter);
                 }
-           
             }
             catch (ModelNotFoundException $e)
             {
@@ -80,13 +79,13 @@ class FilteringController extends Controller
         {
             try
             {
-            $taskfilter = Task::whereHas('users', function ($query) use ($selectedUser) {
+                $taskfilter = Task::whereHas('users', function ($query) use ($selectedUser) {
                 $query->where('users.id', $selectedUser);
             })->whereHas('projects', function ($query) use ($selectedProject) {
                 $query->where('projects.project_id', $selectedProject);
             })->get();
 
-               if ($taskfilter->isEmpty()) 
+                if ($taskfilter->isEmpty()) 
                 {
                     return response()->json(['error' => 'No tasks found for the given user and project'], 404);
                 }
