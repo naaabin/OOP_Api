@@ -21,7 +21,7 @@ class TaskUserSeeder extends Seeder
         // For each task, attach random users
         foreach ($tasks as $task) {
             // Get a random number of users for each task
-            $randomUsers = $users->random(rand(1, 3))->pluck('id');
+            $randomUsers = $users->random(rand(1, 5))->pluck('id');
             $task->users()->syncWithoutDetaching($randomUsers);
         }
     }

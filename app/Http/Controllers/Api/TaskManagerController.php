@@ -77,12 +77,12 @@ class TaskManagerController extends Controller
                       {   
                       
                           $filename = $file->getClientOriginalName();
-                          $path = $file->storeAs('Uploads',$filename,'public');  //stores the file and returns full path
+                          $file->move(public_path('uploads'),$filename);
         
                           // Insert the file info into the database
                           $fileRecord = new File();
                           $fileRecord->file_name = $filename;
-                          $fileRecord->file_loc = $path;
+                          $fileRecord->file_loc = 'uploads/'.$filename;
                           $fileRecord->task_id =  $lastInsertedId;
                           $fileRecord->save();
                           $fileIDs[] = $fileRecord->file_id;   //last inserted file id     

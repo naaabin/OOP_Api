@@ -17,6 +17,7 @@ class FileFactory extends Factory
     public function definition(): array
     {
         return [
+            
            "file_name"=> $this->faker->name .'jpg',
            'file_loc'=> $this->faker->text,
            'created_at' => $this->faker->dateTimeBetween(),

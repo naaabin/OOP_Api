@@ -64,7 +64,7 @@ class UserController extends Controller
 
         if (! $token = JWTAuth::attempt($request->only('email', 'password'))) 
         {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['Status' => 'Unauthorized User!'], 401);
         }
 
         return $this->respondWithToken($token);
@@ -74,10 +74,10 @@ class UserController extends Controller
     {    
         $user = Auth::user();
         return response()->json([  
-            'User' => $user->name,
+            'Status' => $user->name.',you have logged in successfully!',
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => JWTAuth::factory()->getTTL() * 120
+            'expires_in' => JWTAuth::factory()->getTTL() * 4     //4hrs
         ]);
     }
 
@@ -87,5 +87,4 @@ class UserController extends Controller
 
         return response()->json(['message' => 'Successfully logged out']);
     }
-
 }
